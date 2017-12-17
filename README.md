@@ -102,3 +102,103 @@ randomizedCC(L, V, E)
 
 ### Implementação
 
+Usando cilk++, o código acima foi implementado da seguinte forma:
+
+```C++
+void randomizedConectedComponents(vector<Vertex> &L, vector<Vertex> &V, vector<Edge> &E){
+  if (E.size() == 0) return;
+  int n = V.size();  int m = E.size();
+  vector<Vertex> tmpS(m);
+
+  Group *C = new Group[n+1];
+  cilk_for(int i = 0; i < n; i++){
+	C[V[i]] = ((double)rand()/RAND_MAX > 0.5) ? Group::PARENT : Group::CHILD;
+  }
+
+  cilk_for(int i = 0; i < m; i++){
+    if (C[E[i].u] == Group::CHILD && C[E[i].v] == Group::PARENT){
+      L[E[i].u] = L[E[i].v];
+    }
+  }
+
+  cilk_for(int i = 0; i < m; i++){
+    if ( L[E[i].u] != L[E[i].v] ) tmpS[i] = 1; else tmpS[i] = 0;
+  }
+
+  vector<Vertex> S(m);
+  prefixSum(tmpS, S);
+  vector<Edge> F(S[m-1]);
+
+  cilk_for(int i = 0; i < m; i++){
+    if(L[E[i].u] != L[E[i].v]){
+	F[S[i]-1].u = L[E[i].u];
+	F[S[i]-1].v = L[E[i].v];
+    }
+  }
+
+  randomizedConectedComponents(L, V, F);
+
+  cilk_for(int i = 0; i < m; i++){
+    if(E[i].v == L[E[i].u]) L[E[i].u] = L[E[i].v];
+  }
+}
+
+```
+
+Onde a função prefixSum é implementada também em paralelo da seguinte forma:
+
+```C++
+void prefixSum(vector<int> &S, vector<int> &res){
+  int n = S.size();
+  vector<int> Sstar(n/2);
+  vector<int> Sout(n/2);
+
+  if(n == 1){
+    res[0] = S[0];
+    return;
+  }
+
+  cilk_for(int i = 0; i < n/2; i++){
+    Sstar[i] = S[2*i] + S[2*i + 1];
+  }
+
+  prefixSum(Sstar, Sout);
+
+  cilk_for(int i = 0; i < n; i++){
+    if(i == 0){
+      res[i] = S[i];
+    }else if(i%2 != 0){
+      res[i] = Sout[i/2];
+    }else{
+      res[i] = Sout[(i-1)/2] + S[i];
+    }
+  }
+}
+
+```
+
+O programa implementado espera um arquivo de texto com o grafo G = (V, E). A primeira linha do arquivo de texto possui a n e m separados por um espaço. Depois disso m linhas se seguem onde cada linha possui dois números indicando uma aresta no grafo. 
+
+## Trabalho Total
+
+Cada vez que o passo 3 do algoritmo é executado, o grafo é reduzido mais ou menos pela metade. Dessa forma, a cada iteração do algoritmo, estamos trabalhando com a metade da iteração anterior. Além disso, o grafo está representado por uma lista de adjacências, que tem complexidade O(n + m) para ser percorrida. Portanto, o trabalho total desse algoritmo é de O((n+m)*log n). 
+
+## Testes e Resultados
+
+Para testar o algoritmo implementado foram usados os grafos encontrados em:
+
+1. https://snap.stanford.edu/data/wiki-Vote.html
+2. https://snap.stanford.edu/data/email-Enron.html
+3. https://snap.stanford.edu/data/roadNet-CA.html
+
+E o algoritmo para encontrar componentes conexas sequencialmente disponível em: http://www.geeksforgeeks.org/connected-components-in-an-undirected-graph/. Após algumas pequenas modificações no algoritmo do Geeks for Geeks para ficar no padrão do meu algoritmo, os seguintes resultados foram achados:
+
+| Arquivo        | Meu algoritmo           | Geeks for Geeks  |  Vertices x Arestas / CC |
+| ------------- |:-------------:|:-----:|:-------------:|
+| wiki-Vote.txt      | 0.728755 s | 0.00716278 s | 7115 x 103689 / 903 |
+| email-Enron.txt     | 0.232372 s      |   0.0317371 s | 36692 x 183831 / 1067 |
+| roadNet-CA.txt | 16.5865 s    |    + 10 min | 36692 x 183831 / 1067 |
+
+Os resultados mostram que conforme o tamanho do grafo vai crescendo, a solução sequencial se torna cada vez menos eficiente enquanto a paralela ainda é uma solução viável. Grafos monstruosos, como o do orkut (encontrado em https://snap.stanford.edu/data/com-Orkut.html) não terminaram de rodar nem sequencialmente nem paralelamente nos testes realizados na minha máquina de 8 cores. 
+
+Apesar de a solução que implementei ser eficiente, ela não chega a ser melhor que a sequencial em todos os casos. Veja que nos primeiros dois casos a versão paralela chega a ser cerca de 10 vezes pior que a sequencial. A versão paralela parece ficar mais eficiente quando o número de componentes conexas e o tamanho do grafo aumenta em comparação a versão sequencial. 

@@ -8,6 +8,8 @@ g++ cc.cpp -o cc -fcilkplus -lcilkrts -std=c++11
 #include <stdio.h>
 #include <vector>
 #include <map>
+#include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -60,7 +62,7 @@ void randomizedConectedComponents(vector<Vertex> &L, vector<Vertex> &V, vector<E
   int m = E.size();
   vector<Vertex> tmpS(m);
 
-  Group *C = new Group[n+1];
+  Group *C = new Group[2*n+1];
   cilk_for(int i = 0; i < n; i++){
     C[V[i]] = randomGroup();
   }
@@ -104,14 +106,15 @@ void printCC(vector<int> &L){
     CC[L[k]].push_back(k);
   }
 
-  for(map<int, vector<int> >::iterator iter = CC.begin(); iter != CC.end(); ++iter){
+  /*for(map<int, vector<int> >::iterator iter = CC.begin(); iter != CC.end(); ++iter){
     vector<int> tmp = iter->second;
     cout << "CC: ";
     for (int i = 0; i < tmp.size(); i++){
       cout << tmp[i] <<  " ";
     }
     cout <<  endl;
-  }
+  }*/
+  cout << "#Found CC: " << CC.size() << endl;
 }
 
 int main(){
@@ -120,7 +123,7 @@ int main(){
 
   vector<Vertex> V(n);
   vector<Edge>   E(m);
-  vector<Vertex> L(n+1);
+  vector<Vertex> L(2*n+1);
 
   cilk_for(int i = 0; i < n; i++){
     V[i]   = i+1;
@@ -131,9 +134,12 @@ int main(){
     scanf("%d %d", &(E[i].u), &(E[i].v));
   }
 
+  auto start = std::chrono::high_resolution_clock::now();
   randomizedConectedComponents(L, V, E);
-
+  auto finish = std::chrono::high_resolution_clock::now();
+  
   printCC(L);
-
+  std::chrono::duration<double> elapsed = finish - start;
+  std::cout << "Elapsed time: " << elapsed.count() << " s\n";
   return EXIT_SUCCESS;
 }

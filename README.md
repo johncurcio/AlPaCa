@@ -208,4 +208,5 @@ Apesar de a solução que implementei ser eficiente, ela não chega a ser melhor
 ## Referências
 
 [1] http://www3.cs.stonybrook.edu/~rezaul/Spring-2013/CSE638/CSE638-lectures-10-11.pdf
+
 [2] Joseph Jajá, Introduction to Parallel Algorithms

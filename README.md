@@ -36,6 +36,7 @@ Seja G1 o grafo dado a seguir, podemos achar as componentes conexas de G1 da seg
 **Passo 1:** Para cada vértice v em V, jogue uma moeda aleatoriamente. Se der cara, marque esse vértice como um filho. Se der coroa, marque-o como pai.
 
 ![grafo g1](/images/image4.png)
+
 Os vértices marcados com um X vermelho são pais.
 
 **Passo 2:** Para cada aresta (u, v) em E, se u é um pai e v é um filho, faça o filho apontar para o pai. 
@@ -198,6 +199,7 @@ E o algoritmo para encontrar componentes conexas sequencialmente disponível em:
 | wiki-Vote.txt      | 0.728755 s | 0.00716278 s | 7115 x 103689 / 903 |
 | email-Enron.txt     | 0.232372 s      |   0.0317371 s | 36692 x 183831 / 1067 |
 | roadNet-CA.txt | 16.5865 s    |    + 10 min | 36692 x 183831 / 1067 |
+
 CC = número de componentes conexas
 
 

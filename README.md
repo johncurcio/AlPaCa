@@ -198,7 +198,14 @@ E o algoritmo para encontrar componentes conexas sequencialmente disponível em:
 | wiki-Vote.txt      | 0.728755 s | 0.00716278 s | 7115 x 103689 / 903 |
 | email-Enron.txt     | 0.232372 s      |   0.0317371 s | 36692 x 183831 / 1067 |
 | roadNet-CA.txt | 16.5865 s    |    + 10 min | 36692 x 183831 / 1067 |
+CC = número de componentes conexas
+
 
 Os resultados mostram que conforme o tamanho do grafo vai crescendo, a solução sequencial se torna cada vez menos eficiente enquanto a paralela ainda é uma solução viável. Grafos monstruosos, como o do orkut (encontrado em https://snap.stanford.edu/data/com-Orkut.html) não terminaram de rodar nem sequencialmente nem paralelamente nos testes realizados na minha máquina de 8 cores. 
 
 Apesar de a solução que implementei ser eficiente, ela não chega a ser melhor que a sequencial em todos os casos. Veja que nos primeiros dois casos a versão paralela chega a ser cerca de 10 vezes pior que a sequencial. A versão paralela parece ficar mais eficiente quando o número de componentes conexas e o tamanho do grafo aumenta em comparação a versão sequencial. 
+
+## Referências
+
+[1] http://www3.cs.stonybrook.edu/~rezaul/Spring-2013/CSE638/CSE638-lectures-10-11.pdf
+[2] Joseph Jajá, Introduction to Parallel Algorithms

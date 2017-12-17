@@ -6,7 +6,7 @@ Seja G = (V, E) um grafo representado por uma lista de adjacências, o objetivo 
 
 Um grafo é conexo se para cada par (u, v) de seus vértices, existe um caminho com origem u e término v. Tome como exemplo o grafo G1 a seguir, onde G1 é numerado da esquerda pra direita, e de cima para baixo, com número contínuos de 1 até |V| para todos os seus vértices.
 
-![grafo g1][images/image1.png]
+![grafo g1](/images/image1.png)
 
 Veja que a partir do vértice 1 não existe nenhum caminho para o vértice 4. Isso indica que G1 não é conexo. Contudo, a partir do vértice 1 é possível alcançar os vértices 2, 3, 7, 8, 9, e 10, implicando que esses vértices formam um pedaço (ou componente) conexo do meu grafo G1. Visualmente podemos verificar que existem 3 componentes conexas no grafo G1, mas como determinar isso através de um algoritmo?
 
@@ -31,51 +31,51 @@ Existe um algoritmo chamado *Randomized Parallel Connected Components*[1] que se
 
 Seja G1 o grafo dado a seguir, podemos achar as componentes conexas de G1 da seguinte forma: 
 
-![grafo g1][images/image1.png]
+![grafo g1](/images/image1.png)
 
 **Passo 1:** Para cada vértice v em V, jogue uma moeda aleatoriamente. Se der cara, marque esse vértice como um filho. Se der coroa, marque-o como pai.
 
-![grafo g1][images/image4.png]
+![grafo g1](/images/image4.png)
 Os vértices marcados com um X vermelho são pais.
 
 **Passo 2:** Para cada aresta (u, v) em E, se u é um pai e v é um filho, faça o filho apontar para o pai. 
 
-![grafo g1][images/image3.png]
+![grafo g1](/images/image3.png)
 
 O conjunto formado por cada um dos pais e dos seus filhos formam um possível candidato a componente conexa.
 
-![grafo g1][images/image8.png]
+![grafo g1](/images/image8.png)
 
 **Passo 3:** Junte cada pai com seus filhos em um único vértice. Isso é possível de ser feito com uma soma de prefixos. 
 
-![grafo g1][images/image2.png]
+![grafo g1](/images/image2.png)
 
 **Passo 4:** Nesse novo grafo formado, se o número de arestas for 0 vá para o passo 5, senão repita o passo 1.
 
 #### Iteração 2:
 
-![grafo g1][images/image5.png]
-![grafo g1][images/image11.png]
-![grafo g1][images/image10.png]
-![grafo g1][images/image9.png]
+![grafo g1](/images/image5.png)
+![grafo g1](/images/image11.png)
+![grafo g1](/images/image10.png)
+![grafo g1](/images/image9.png)
 
 
 #### Iteração 3:
 
-![grafo g1][images/image8.png]
-![grafo g1][images/image6.png]
-![grafo g1][images/image12.png]
+![grafo g1](/images/image8.png)
+![grafo g1](/images/image6.png)
+![grafo g1](/images/image12.png)
 
 **Passo 5:** Quando o número de arestas for 0, a quantidade de componentes conexas foi encontrada e é possível mapear de volta para o grafo original. 
 
-![grafo g1][images/image13.png]
+![grafo g1](/images/image13.png)
 
 ### Pseudo-código
 
 Dado um grafo G = (V, E), onde |V| = n, |E| = m. Seja L meu vetor resposta, C o vetor que guarda se um vértice é pai ou filho e S o vetor da soma de prefixos, o passo a passo explicado acima pode ser traduzido no seguinte pseudo-código:
 
 ```
-	randomizedCC(L, V, E)
+randomizedCC(L, V, E)
 	Inicialize os arrays C[1..n], L[1..n] = V, S[1..m]
 	Se m = 0, então retorne L
 	Para v de 1 até n em paralelo

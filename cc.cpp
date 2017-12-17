@@ -62,8 +62,8 @@ void randomizedConectedComponents(vector<Vertex> &L, vector<Vertex> &V, vector<E
 
   Group *C = new Group[n+1];
   cilk_for(int i = 0; i < n; i++){
-		C[V[i]] = randomGroup();
-	}
+    C[V[i]] = randomGroup();
+  }
 
   cilk_for(int i = 0; i < m; i++){
     if (C[E[i].u] == Group::CHILD && C[E[i].v] == Group::PARENT){
@@ -82,9 +82,9 @@ void randomizedConectedComponents(vector<Vertex> &L, vector<Vertex> &V, vector<E
 
   cilk_for(int i = 0; i < m; i++){
     if(L[E[i].u] != L[E[i].v]){
-			F[S[i]-1].u = L[E[i].u];
-			F[S[i]-1].v = L[E[i].v];
-		}
+      F[S[i]-1].u = L[E[i].u];
+      F[S[i]-1].v = L[E[i].v];
+    }
   }
 
   S.clear();
@@ -98,9 +98,9 @@ void randomizedConectedComponents(vector<Vertex> &L, vector<Vertex> &V, vector<E
 }
 
 void printCC(vector<int> &L){
-	map < int, vector<int> > CC;
-	vector< int > result;
-	for(int k = 1; k < L.size(); k++){
+  map < int, vector<int> > CC;
+  vector< int > result;
+  for(int k = 1; k < L.size(); k++){
     CC[L[k]].push_back(k);
   }
 
@@ -116,24 +116,24 @@ void printCC(vector<int> &L){
 
 int main(){
   int n, m;
-	scanf("%d %d", &n, &m);
+  scanf("%d %d", &n, &m);
 
   vector<Vertex> V(n);
-	vector<Edge>   E(m);
-	vector<Vertex> L(n+1);
+  vector<Edge>   E(m);
+  vector<Vertex> L(n+1);
 
-	cilk_for(int i = 0; i < n; i++){
-		V[i]   = i+1;
-		L[i+1] = i+1;
-	}
+  cilk_for(int i = 0; i < n; i++){
+    V[i]   = i+1;
+    L[i+1] = i+1;
+  }
 
-	for(int i = 0; i < m; i++){
-		scanf("%d %d", &(E[i].u), &(E[i].v));
-	}
+  for(int i = 0; i < m; i++){
+    scanf("%d %d", &(E[i].u), &(E[i].v));
+  }
 
-	randomizedConectedComponents(L, V, E);
+  randomizedConectedComponents(L, V, E);
 
-	printCC(L);
+  printCC(L);
 
   return EXIT_SUCCESS;
 }

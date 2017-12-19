@@ -198,7 +198,7 @@ E o algoritmo para encontrar componentes conexas sequencialmente disponível em:
 | ------------- |:-------------:|:-----:|:-------------:|
 | wiki-Vote.txt      | 0.728755 s | 0.00716278 s | 7115 x 103689 / 903 |
 | email-Enron.txt     | 0.232372 s      |   0.0317371 s | 36692 x 183831 / 1067 |
-| roadNet-CA.txt | 16.5865 s    |    + 10 min | 36692 x 183831 / 1067 |
+| roadNet-CA.txt | 16.5865 s    |    25.6373 s | 1965206 x 2766607 / 8685 |
 
 CC = número de componentes conexas
 
